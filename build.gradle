@@ -1,12 +1,32 @@
 plugins {
     id 'org.springframework.boot' version '2.3.0.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
     id 'java'
 }
 
 group = 'com.project'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
 
 configurations {
     compileOnly {
@@ -27,6 +47,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.flywaydb:flyway-core'
     implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+    implementation 'com.querydsl:querydsl-jpa'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
