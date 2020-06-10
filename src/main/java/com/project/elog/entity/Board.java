@@ -2,7 +2,9 @@ package com.project.elog.entity;
 
 import com.project.elog.common.PostType;
 import com.sun.istack.NotNull;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
 @Getter
 public class Board extends BaseEntity {
 
@@ -19,10 +22,10 @@ public class Board extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
-    @Column
+    @Column (length = 500, nullable = false)
     private String title;
 
-    @Column
+    @Column (columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @Enumerated(EnumType.ORDINAL)
@@ -46,11 +49,18 @@ public class Board extends BaseEntity {
     @ManyToMany
     private List<Tag> tags = new ArrayList<>();
 
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
+    @Builder
+    public Board(String title, String content, PostType postType,
+                 long cntVisitor, long cntAccuVisitor, PostParent postParent,
+                 User registerUser, List<Tag> tags){
+        this.title = title;
+        this.content = content;
+        this.postType = postType;
+        this.cntVisitor = cntVisitor;
+        this.cntAccuVisitor = cntAccuVisitor;
+        this.postParent = postParent;
+        this.registerUser = registerUser;
+        this.tags = tags;
+    }
 
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
 }
