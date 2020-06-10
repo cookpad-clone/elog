@@ -19,6 +19,7 @@ public class UserRepositoryCustomImpl extends QuerydslRepositorySupport implemen
     @Override
     public List<User> getHa() {
         return from(QUser.user)
+                // where(Quser.user.email.eq("")
                 .fetch();
     }
 }
