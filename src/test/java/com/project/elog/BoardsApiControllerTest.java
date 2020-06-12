@@ -6,6 +6,7 @@ import com.project.elog.dto.BoardSaveRequestDto;
 import com.project.elog.entity.Board;
 import com.project.elog.entity.User;
 import com.project.elog.respository.BoardRepository;
+import com.project.elog.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ExtendWith(SpringExtension.class)
@@ -36,9 +36,12 @@ public class BoardsApiControllerTest {
     @Autowired
     private BoardRepository boardRepository;
 
+    @Autowired
+    private UserService userService;
+
     @AfterEach
     public void teardown() throws Exception{
-        boardRepository.deleteAll();
+//        boardRepository.deleteAll();
     }
 
     @Test
@@ -50,6 +53,9 @@ public class BoardsApiControllerTest {
                 .name("병호띄")
                 .providerType(ProviderType.FACEBOOK)
                 .build();
+
+        user = userService.addUser(user);
+        System.out.println(user.toString());
 
         BoardSaveRequestDto requestDto = BoardSaveRequestDto.builder()
                 .cntAccuVisitor(0)
@@ -65,16 +71,14 @@ public class BoardsApiControllerTest {
         String url = "http://localhost:"+port+"/api/v1/boards";
 
         //when
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, requestDto, String.class);
-
+        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestDto, Long.class);
         //then
-        assertThat(responseEntity.getStatusCode(), is(equalTo(HttpStatus.OK)));
-        //assertThat(responseEntity.getBody(), is(emptyOrNullString()));
-        System.out.println(responseEntity.getBody());
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
 
         List<Board> boards = boardRepository.findAll();
-        assertThat(boards.get(0).getTitle(), is(equalTo("아무제목")));
-        assertThat(boards.get(0).getContent(), is(equalTo("아무내용")));
-
+        assertThat(boards).isNotEmpty();
+        assertThat(boards.get(0).getTitle()).isEqualTo("아무제목");
+        assertThat(boards.get(0).getContent()).isEqualTo("아무내용");
     }
 }
