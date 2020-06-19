@@ -41,7 +41,7 @@ public class BoardsApiControllerTest {
 
     @AfterEach
     public void teardown() throws Exception{
-//        boardRepository.deleteAll();
+        boardRepository.deleteAll();
     }
 
     @Test

@@ -43,7 +43,8 @@ public class Board extends BaseEntity {
     @NotNull
     private User registerUser;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tagID", referencedColumnName = "id")
     private List<Tag> tags = new ArrayList<>();
 
     @Builder
