@@ -1,6 +1,7 @@
 package com.project.elog.service;
 
 import com.project.elog.dto.BoardSaveRequestDto;
+import com.project.elog.entity.Board;
 import com.project.elog.respository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,4 +16,12 @@ public class BoardService {
     public Long save(BoardSaveRequestDto requestDto){
         return boardRepository.save(requestDto.toEntity()).getId();
     }
+
+    @Transactional
+    public void delete(Long boardId){
+        boardRepository.deleteById(boardId);
+    }
+
+
+
 }
