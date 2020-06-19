@@ -48,6 +48,7 @@ dependencies {
     implementation 'org.flywaydb:flyway-core'
     implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
     implementation 'com.querydsl:querydsl-jpa'
+    implementation 'org.apache.commons:commons-lang3:3.6'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
